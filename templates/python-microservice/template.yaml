@@ -1,0 +1,50 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: python-microservice
+  title: Python Microservice
+  description: Cria um microserviço Python simples com TechDocs
+spec:
+  owner: platform-team
+  type: service
+
+  parameters:
+    - title: Informações do serviço
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Nome do serviço
+          type: string
+          description: Nome do repositório
+        owner:
+          title: Time responsável
+          type: string
+          description: Ex: team-finance
+
+  steps:
+    - id: fetch-template
+      name: Gerar arquivos do serviço
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+
+    - id: publish
+      name: Criar repositório no GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=FernandoHenriqueSilva&repo=${{ parameters.name }}
+        defaultBranch: main
+        description: Microserviço Python criado via Backstage
+
+    - id: register
+      name: Registrar no catálogo
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
