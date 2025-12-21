@@ -21,7 +21,7 @@ spec:
         owner:
           title: Time responsável
           type: string
-          description: Ex: team-finance
+          description: Ex team-finance
 
   steps:
     - id: fetch-template
