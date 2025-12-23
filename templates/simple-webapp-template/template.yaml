@@ -5,7 +5,7 @@ metadata:
   title: Simple Web App
   description: Cria uma aplicação web simples com Nginx, Docker e TechDocs
 spec:
-  owner: platform
+  owner: default
   type: service
 
   parameters:
