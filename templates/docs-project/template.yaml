@@ -1,0 +1,48 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: docs-project
+  title: 📘 Projeto de Documentação Técnica
+  description: Cria um repositório apenas de documentação com TechDocs
+spec:
+  owner: platform-team
+  type: documentation
+
+  parameters:
+    - title: Informações do projeto
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Nome do projeto
+          type: string
+          description: Ex docs-payments, runbook-checkout
+        owner:
+          title: Time responsável
+          type: string
+          description: Ex team-platform
+
+  steps:
+    - id: fetch
+      name: Gerar estrutura de documentação
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+
+    - id: publish
+      name: Criar repositório no GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=FernandoHenriqueSilva&repo=${{ parameters.name }}
+        defaultBranch: main
+
+    - id: register
+      name: Registrar no catálogo
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml

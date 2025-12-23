@@ -1,0 +1,9 @@
+site_name: {{ name }}
+site_description: Documentação técnica do projeto {{ name }}
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Arquitetura: architecture.md
