@@ -1,0 +1,50 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: simple-webapp
+  title: Simple Web App
+  description: Cria uma aplicação web simples com Nginx, Docker e TechDocs
+spec:
+  owner: platform
+  type: service
+
+  parameters:
+    - title: Informações da Aplicação
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Nome da aplicação
+          type: string
+          description: Nome do serviço (ex my-web-app)
+        owner:
+          title: Owner
+          type: string
+          description: Time responsável pela aplicação
+          ui:field: OwnerPicker
+
+  steps:
+    - id: fetch-base
+      name: Fetch Skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=FernandoHenriqueSilva&repo=${{ parameters.name }}
+        description: Aplicação criada via Backstage
+        defaultBranch: main
+
+    - id: register
+      name: Register in Backstage
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
