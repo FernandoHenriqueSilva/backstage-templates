@@ -4,7 +4,6 @@ metadata:
   name: simple-webapp
   title: Simple Web App
   description: Cria uma aplicação web simples com Nginx, Docker e TechDocs
-
 spec:
   owner: group:default/platform-team
   type: service
@@ -22,7 +21,6 @@ spec:
         owner:
           title: Owner
           type: string
-          description: Time responsável pela aplicação
           ui:field: OwnerPicker
 
   steps:
